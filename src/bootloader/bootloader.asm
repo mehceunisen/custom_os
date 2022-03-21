@@ -1,20 +1,21 @@
-[org 0x7c00]
-
 mov ah, 0x0e
-mov bx, str_var
-mov al, [bx]
+; defining the offset value in to the extra segment register
+mov bx, 0x7c0 ; 0x7c00 doesn't work, i guess it is something related with register size
+mov es, bx
+
+mov al, [es:str_var]
+int 0x10
+
+mov ds, bx
+mov al, [str_var]
+
+int 0x10
 
 
-call print
-
-
-
-%include "print.asm"
-
-
+jmp $
 
 str_var:
-    db 'Hello World!', 0
+    db 'a'
 
 
 times 510 - ($ - $$) db 0
