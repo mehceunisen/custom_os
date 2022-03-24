@@ -8,7 +8,7 @@ bootloader.o: src/bootloader/bootloader.asm
 	nasm $< -f bin -o build/obj/bootloader/$@ -i 'src/bootloader'
 
 bootloader.bin: src/bootloader/bootloader.asm
-		nasm $< -f bin -o build/$@ -i 'src/bootloader'
+	nasm $< -f bin -o build/$@ -i 'src/bootloader'
 
 
 # fantasy stuff
