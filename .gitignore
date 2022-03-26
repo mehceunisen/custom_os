@@ -3,3 +3,5 @@
 *.bin
 /build
 /.vscode
+/*.o
+/*.bin
