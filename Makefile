@@ -1,30 +1,48 @@
-all: kernel.o call_kernel.o call_kernel.bin bootloader.bin os.bin
-# compiles all the kernel C source codes
-kernel.o: src/kernel/*.c
-	gcc -fno-pie -Wall -m32 -mtune=i386 -ffreestanding -c $< -o build/obj/kernel/$@
+CC := gcc
+CC_FLAGS := -g -fno-pie -Wall -ffreestanding -c
 
-# compiles the bootloader
-os.bin: build/bootloader.bin build/call_kernel.bin
-	cat $^ > build/$@
-	
+LINK := ld
+LINK_FLAGS := -m elf_i386
 
-call_kernel.bin: build/obj/kernel/kernel.o build/obj/bootloader/call_kernel.o 
-	ld -m elf_i386 -o build/$@ -Ttext 0x1000 build/obj/kernel/kernel.o build/obj/bootloader/call_kernel.o --oformat binary
+NASM_FLAGS := -f elf64
 
-bootloader.bin: src/bootloader/bootloader.asm
-	nasm $< -f bin -o build/$@ -i 'src/bootloader'
-
-call_kernel.o: src/bootloader/call_kernel.asm
-	nasm -f elf32 -o build/obj/bootloader/$@ $< -i 'src/bootloader'
+KERNEL_DIR := src/kernel
+BOOTLOADER_DIR := src/bootloader
+DRIVER_DIR := drivers
+BUILD_DIR := build
+OBJ_DIR := build/obj
 
 
+C_SRC_FILES = $(wildcard src/kernel/*.c driver/*.c)
+C_HEADER_FILES = $(wildcard src/kernel/header/*.h driver/header/*.h)
+OBJ_FILES = $(wildcard build/obj/*.o)
 
-# fantasy stuff
+all: bootloader.bin kernel.o ports.o call_kernel.o call_kernel.bin os.bin
+%.o: $(KERNEL_DIR)/%.c
+	gcc $(CC_FLAGS) $< -o $(OBJ_DIR)/$@
+%.o: $(DRIVER_DIR)/%.c
+	gcc $(CC_FLAGS) $< -o $(OBJ_DIR)/$@
+
+
+
+call_kernel.o: $(BOOTLOADER_DIR)/call_kernel.asm
+	nasm $(NASM_FLAGS) -o $(OBJ_DIR)/$@ $< -i 'src/bootloader'
+
+bootloader.bin: $(BOOTLOADER_DIR)/bootloader.asm
+	nasm $< -f bin -o $(BUILD_DIR)/bootloader.bin -i 'src/bootloader'
+
+call_kernel.bin: $(OBJ_FILES)
+	$(LINK) -o $(BUILD_DIR)/$@ -Ttext 0x1000 $^ --oformat binary
+
+os.bin: $(BUILD_DIR)/bootloader.bin $(BUILD_DIR)/call_kernel.bin
+	cat $^ > $(BUILD_DIR)/$@
+
+run:
+	qemu-system-i386 $(BUILD_DIR)/os.bin
+
+
 clean:
-	rm build/obj/kernel/*.o build/obj/bootloader/*.o build/*.bin
+	rm $(OBJ_DIR)/*.o $(BUILD_DIR)/*.bin
 
-cleanobj:
-	rm build/obj/kernel/*.o build/obj/bootloader/*.o
-
-run: build/os.bin
-	qemu-system-i386 -fda $<
+#bootsect = bootloader
+#kernelentry = callkernel
