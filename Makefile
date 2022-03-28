@@ -1,8 +1,8 @@
 CC := gcc
-CC_FLAGS := -g -fno-pie -Wall -ffreestanding -c
+CC_FLAGS := -g -fno-pie -ffreestanding -c -w
 
 LINK := ld
-LINK_FLAGS := -m elf_i386
+LINK_FLAGS := -s -e main
 
 NASM_FLAGS := -f elf64
 
@@ -21,7 +21,7 @@ os.bin: bootloader.bin call_kernel.bin
 	cat $^ > $(BUILD_DIR)/$@
 
 call_kernel.bin: call_kernel.o ${OBJ_FILES}
-	$(LINK) -o $@ -Ttext 0x1000 $^ --oformat binary
+	$(LINK) $(LINK_FLAGS) -Ttext 0x1000 -o $@  $^ --oformat binary
 
 call_kernel.o: $(BOOTLOADER_DIR)/call_kernel.asm
 	nasm $(NASM_FLAGS) -o $@ $< -i 'src/bootloader'
@@ -33,10 +33,7 @@ bootloader.bin: $(BOOTLOADER_DIR)/bootloader.asm
 	nasm $< -f bin -o bootloader.bin -i 'src/bootloader'
 
 run:
-	qemu-system-i386 $(BUILD_DIR)/os.bin
+	qemu-system-x86_64 $(BUILD_DIR)/os.bin
 
 clean:
-	rm ${OBJ_FILES} *.bin build/os.bin
-
-#bootsect = bootloader
-#kernelentry = callkernel
+	rm *.ini *.o *.bin build/os.bin ${OBJ_FILES}

@@ -7,3 +7,4 @@
 /*.bin
 drivers/*.o
 src/kernel/*.o
+*.ini

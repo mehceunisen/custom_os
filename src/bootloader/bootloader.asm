@@ -2,13 +2,13 @@
 
 KERNEL_OFFSET equ 0x1000
 
-mov [BOOT_DRIVE], dl
-mov bp, 0x9000 ;initailize the stack
-mov sp, bp
+    mov [BOOT_DRIVE], dl
+    mov bp, 0x9000 ;initailize the stack
+    mov sp, bp
 
-call load_kernel
-call switch_proc_mode
-jmp $
+    call load_kernel
+    call switch_proc_mode
+    jmp $
 
 
 
@@ -29,8 +29,6 @@ load_kernel:
 
 [bits 32]
 main_start_proc_mode:
-    mov ebx, MSG_PROT_MODE
-    call vga_print
     call KERNEL_OFFSET
     jmp $
 
