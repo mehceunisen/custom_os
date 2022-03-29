@@ -2,7 +2,8 @@ CC := gcc
 CC_FLAGS := -g -fno-pie -ffreestanding -c -w
 
 LINK := ld
-LINK_FLAGS := -s -e main 
+LDS := linker.ld
+LINK_FLAGS := -T $(LDS) -static -Bsymbolic -nostdlib
 
 NASM_FLAGS := -f elf64
 
@@ -15,7 +16,6 @@ OBJ_DIR := build/obj
 C_SRC_FILES = $(wildcard src/kernel/*.c drivers/*.c)
 C_HEADER_FILES = $(wildcard src/kernel/header/*.h driver/header/*.h)
 OBJ_FILES = ${C_SRC_FILES:.c=.o}
-
 
 os.bin: bootloader.bin call_kernel.bin
 	cat $^ > $@
@@ -37,3 +37,6 @@ run:
 
 clean:
 	rm *.ini *.o *.bin ${OBJ_FILES}
+
+boot: bootloader.bin
+	qemu-system-x86_64 bootloader.bin
