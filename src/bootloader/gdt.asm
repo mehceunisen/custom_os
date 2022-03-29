@@ -35,3 +35,12 @@ gdt_descriptor:
 ; define some constants for later use
 CODE_SEG equ gdt_code - gdt_start
 DATA_SEG equ gdt_data - gdt_start
+
+; entering long mode codes
+[bits 32]
+edit_gdt:
+    mov [gdt_code + 6], byte 10101111b
+    mov [gdt_data + 6], byte 10101111b
+    ret
+
+[bits 16]
