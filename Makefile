@@ -17,27 +17,27 @@ C_SRC_FILES = $(wildcard src/kernel/*.c drivers/*.c)
 C_HEADER_FILES = $(wildcard src/kernel/header/*.h driver/header/*.h)
 OBJ_FILES = ${C_SRC_FILES:.c=.o}
 
-
-bootloader.bin: $(BOOTLOADER_DIR)/bootloader.asm
-	nasm $< -f bin -o bootloader.bin -i 'src/bootloader'
-
-call_kernel.bin: call_kernel.o ${OBJ_FILES}
-	$(LINK) $(LINK_FLAGS) -Ttext 0x1000 -o $@  $^ --oformat binary
-
-call_kernel.o: $(BOOTLOADER_DIR)/call_kernel.asm
-	nasm $(NASM_FLAGS) -o $@ $< -i 'src/bootloader'
-
-%.o: %.c
-	${CC} ${CCFLAGS} -ffreestanding -c $< -o $@
-
-bootloader.bin: $(BOOTLOADER_DIR)/bootloader.asm
-	nasm $< -f bin -o bootloader.bin -i 'src/bootloader'
-
-run:
+boot: bootloader.bin
 	qemu-system-x86_64 bootloader.bin
+
+bootloader.bin: $(BOOTLOADER_DIR)/bootloader.asm
+	nasm $< -f bin -o bootloader.bin -i 'src/bootloader'
+
+# call_kernel.bin: call_kernel.o ${OBJ_FILES}
+# 	$(LINK) $(LINK_FLAGS) -Ttext 0x1000 -o $@  $^ --oformat binary
+
+# call_kernel.o: $(BOOTLOADER_DIR)/call_kernel.asm
+# 	nasm $(NASM_FLAGS) -o $@ $< -i 'src/bootloader'
+
+# %.o: %.c
+# 	${CC} ${CCFLAGS} -ffreestanding -c $< -o $@
+
+# bootloader.bin: $(BOOTLOADER_DIR)/bootloader.asm
+# 	nasm $< -f bin -o bootloader.bin -i 'src/bootloader'
+
+# run:
+# 	qemu-system-x86_64 bootloader.bin
 
 clean:
 	rm *.ini *.o *.bin ${OBJ_FILES}
 
-boot: bootloader.bin
-	qemu-system-x86_64 bootloader.bin

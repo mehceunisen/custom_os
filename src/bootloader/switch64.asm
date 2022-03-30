@@ -1,3 +1,8 @@
+detect_multiboot:
+    cmp eax, 0x36d76289
+    jne no_multiboot
+    ret
+
 detect_cpuid:
     pushfd
     pop eax
@@ -35,6 +40,9 @@ detect_long_mode:
     jb no_long_mode         ; It is less, there is no long mode.
     ret
 
+no_multiboot:
+    hlt
+    jmp $
 
 no_cpuid:
     ; mov ebx, NO_CPUID_ERR_MSG
@@ -48,3 +56,5 @@ no_long_mode:
     ; call vga_print
     hlt
     jmp $
+
+    

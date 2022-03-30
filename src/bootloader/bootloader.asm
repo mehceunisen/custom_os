@@ -36,6 +36,7 @@ main_start_proc_mode:
     call main_start_long_mode
 
 main_start_long_mode:
+    call detect_multiboot
     call detect_cpuid
     call detect_long_mode
     call identity_paging
