@@ -7,7 +7,7 @@ KERNEL_OFFSET equ 0x1000
     mov sp, bp
 
     call load_kernel
-    jmp CODE_SEG:switch_proc_mode
+    call switch_proc_mode
 
 
 

@@ -2,6 +2,6 @@
 #include "../../drivers/header/screen.h"
 
 void kmain() {
-    // clear_screen();
+    clear_screen();
     // kprint("anani sikim amk bootloaderi");
 }

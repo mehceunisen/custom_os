@@ -1,4 +1,4 @@
-[bits 32]
+bits 32]
 
 gdt_start: ; don't remove the labels, they're needed to compute sizes and jumps
     ; the GDT starts with a null 8-byte

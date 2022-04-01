@@ -1,9 +1,9 @@
 CC := gcc
-CC_FLAGS := -g -fno-pie -ffreestanding -c -w
+CC_FLAGS := -w -I -mtune=x86_64 -ffreestanding -c
 
 LINK := ld
 LDS := linker.ld
-LINK_FLAGS := -T $(LDS) -static -Bsymbolic -nostdlib
+LINK_FLAGS := -T $(LDS) -static -Bsymbolic -nostdlib -n
 
 NASM_FLAGS := -f elf64
 
@@ -27,7 +27,7 @@ call_kernel.o: $(BOOTLOADER_DIR)/call_kernel.asm
 	nasm $(NASM_FLAGS) -o $@ $< -i 'src/bootloader'
 
 %.o: %.c
-	${CC} ${CCFLAGS} -ffreestanding -c $< -o $@
+	${CC} -w -I -mtune=x86_64 -ffreestanding -c $< -o $@
 
 bootloader.bin: $(BOOTLOADER_DIR)/bootloader.asm
 	nasm $< -f bin -o bootloader.bin -i 'src/bootloader'
