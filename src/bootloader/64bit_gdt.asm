@@ -1,9 +1,6 @@
 [bits 32]
-switch_lm:
-    mov eax, cr4                 ; Set the A-register to control register 4.
-    or eax, 1 << 5               ; Set the PAE-bit, which is the 6th bit (bit 5).
-    mov cr4, eax 
 
+switch_lm:
     mov ecx, 0xC0000080          ; Set the C-register to 0xC0000080, which is the EFER MSR.
     rdmsr                        ; Read from the model-specific register.
     or eax, 1 << 8               ; Set the LM-bit which is the 9th bit (bit 8).
@@ -13,7 +10,7 @@ switch_lm:
     or eax, 1 << 31              ; Set the PG-bit, which is the 32nd bit (bit 31).
     mov cr0, eax  
     lgdt [GDT64.Pointer]
-    jmp GDT64.Code:baba
+    jmp .Code:baba
 
 ; Access bits
 PRESENT        equ 1 << 7

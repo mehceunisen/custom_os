@@ -25,4 +25,15 @@ set_paging:
     
     mov eax, cr4                 ; Set the A-register to control register 4.
     or eax, 1 << 5               ; Set the PAE-bit, which is the 6th bit (bit 5).
-    mov cr4, eax 
+    mov cr4, eax
+
+    mov ecx, 0xC0000080
+    rdmsr
+    or eax, 1 << 8
+    wrmsr
+
+    mov eax, cr0
+    or eax, 1 << 31
+    mov cr0, eax
+
+    ret
