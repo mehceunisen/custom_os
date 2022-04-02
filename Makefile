@@ -1,9 +1,9 @@
 CC := gcc
-CC_FLAGS := -w -I -mtune=x86_64 -ffreestanding -c
+CC_FLAGS := -w -m64 -ffreestanding -c -mno-red-zone
 
 LINK := ld
 LDS := linker.ld
-LINK_FLAGS := -T $(LDS) -static -Bsymbolic -nostdlib -n
+LINK_FLAGS := -static -Bsymbolic -nostdlib -n
 
 NASM_FLAGS := -f elf64
 
@@ -20,8 +20,8 @@ OBJ_FILES = ${C_SRC_FILES:.c=.o}
 os.bin: bootloader.bin call_kernel.bin
 	cat $^ > $@
 
-call_kernel.bin: call_kernel.o ${OBJ_FILES}
-	$(LINK) $(LINK_FLAGS) -Ttext 0x1000 -o $@  $^ --oformat binary
+call_kernel.bin: call_kernel.o $(OBJ_FILES)
+	$(LINK) $(LINK_FLAGS) -Ttext 0x7e00 -o $@  $^ --oformat binary
 
 call_kernel.o: $(BOOTLOADER_DIR)/call_kernel.asm
 	nasm $(NASM_FLAGS) -o $@ $< -i 'src/bootloader'
@@ -36,7 +36,7 @@ run:
 	qemu-system-x86_64 os.bin
 
 clean:
-	rm *.ini *.o *.bin ${OBJ_FILES}
+	rm *.o *.bin ${OBJ_FILES}
 
 boot: bootloader.bin
 	qemu-system-x86_64 bootloader.bin
