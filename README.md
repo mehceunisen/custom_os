@@ -1,1 +1,1 @@
-nothing to be hyped, just want to learn more about operating systems.
+#This branch is obselete, switch to mf_os branch.
