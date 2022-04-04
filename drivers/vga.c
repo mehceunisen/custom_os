@@ -34,7 +34,7 @@ void clear_screen() {
 
     for (i = 0; i < screen_size; i++) {
         screen[i*2] = ' ';
-        screen[i*2+1] = WHITE_ON_BLACK;
+        screen[i*2+1] = 0x4f;
     }
     set_cursor_offset(get_offset(0, 0));
 }

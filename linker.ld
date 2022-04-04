@@ -4,19 +4,19 @@ ENTRY(_start)
 SECTIONS
 {
 	_KernelStart = .;
-	.text : ALIGN(0x7e00)
+	.text : ALIGN(0x1200)
 	{
 		*(.text)
 	}
-	.data : ALIGN(0x7e00)
+	.data : ALIGN(0x1200)
 	{
 		*(.data)
 	}
-	.rodata : ALIGN(0x7e00)
+	.rodata : ALIGN(0x1200)
 	{
 		*(.rodata)
 	}
-	.bss : ALIGN(0x7e00)
+	.bss : ALIGN(0x1200)
 	{
 		*(COMMON)
 		*(.bss)
