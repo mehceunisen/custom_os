@@ -3,7 +3,7 @@ CC_FLAGS := -w -m64 -ffreestanding -c -mno-red-zone
 
 LINK := ld
 LDS := linker.ld
-LINK_FLAGS := -static -Bsymbolic -nostdlib -n
+LINK_FLAGS :=-static -Bsymbolic -nostdlib -n
 
 NASM_FLAGS := -f elf64
 
@@ -26,7 +26,7 @@ call_kernel.bin: call_kernel.o $(OBJ_FILES)
 call_kernel.o: $(BOOTLOADER_DIR)/call_kernel.asm
 	nasm $(NASM_FLAGS) -o $@ $< -i 'src/bootloader'
 
-%.o: %.c
+%.o: %.c ${C_HEADER_FILES}
 	${CC} -w -I -mtune=x86_64 -ffreestanding -c $< -o $@
 
 bootloader.bin: $(BOOTLOADER_DIR)/bootloader.asm

@@ -20,7 +20,7 @@ jmp $ ; this will actually never be executed
 [bits 16]
 load_kernel:
     mov bx, KERNEL_OFFSET
-    mov dh, 4
+    mov dh, 0x08
     mov dl, [BOOT_DRIVE]
     call load_disk
     ret
@@ -54,14 +54,7 @@ BEGIN_PM: ; after the switch we will get here
 
 [bits 64]
 begin_lm:
-    mov edi, 0xB8000              ; Set the destination index to 0xB8000.
-    mov rax, 0x1F201F201F201F20   ; Set the A-register to 0x1F201F201F201F20.
-    mov ecx, 500                  ; Set the C-register to 500.
-    rep stosq                     ; Clear the screen.
-    call KERNEL_OFFSET ; have a better understanding offsetting!
-    ; mov [0xb9200], byte 'P'
-    ; mov [0xb9202], byte 'P'
-    ; mov [0xb9204], byte 'P'
+    call KERNEL_OFFSET ; have a better understanding of offset!
     hlt                           ; Halt the processor.
 
 
