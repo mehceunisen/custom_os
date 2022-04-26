@@ -5,14 +5,17 @@
 void _start() {
     clear_screen();
 
-    char* src = (char*)0x2500;
-    for (int i = 0; i < 10; i++)
-    {
-        *(src + i) = 97;
+    char x[2] = {0};
+    x[1] = '\0';
+
+    for (int i = 0; i < 24; i++) {
+        x[0] = itoa(i);
+        kprint_at(x, 0, i);
     }
-    *(src + 11) = '\0';
-    char* dst = (char*)VID_ADDR;
-    memcpy(src, dst, 11);
+
+    kprint_at("This text forces the kernel to scroll. Row 0 will disappear. ", 60, 24);
+    kprint("And with this text, the kernel will scroll again, and row 1 will disappear too!");
+
 
     return;
 }
