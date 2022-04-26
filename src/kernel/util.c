@@ -9,4 +9,5 @@ void memcpy(void* src, void* dest, int16 no_bytes) {
 void free(void* src) {
     *((char*)src) = (char*)0x0;
     //this is the best I can do for now
+    // I know that free doesn't work like this
 }

@@ -4,16 +4,16 @@
 
 void _start() {
     clear_screen();
-    int8* src = (int8*)0x2500;
+
+    char* src = (char*)0x2500;
     for (int i = 0; i < 10; i++)
     {
-        *(src + i) = 'A';
+        *(src + i) = 97;
     }
-    *(src + 10) = '\0';
+    *(src + 11) = '\0';
+    char* dst = (char*)VID_ADDR;
+    memcpy(src, dst, 11);
 
-    char* vid = (char*)VID_ADDR;
-    memcpy(src, vid, 11);
-    free(VID_ADDR);
     return;
 }
 
