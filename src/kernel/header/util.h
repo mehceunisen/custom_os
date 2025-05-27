@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../../../types.h"
-
-void memcpy(void* src, void* dest, int16 no_bytes);
-void free(void* src);
+void memcpy(void* src, void* dest, short unsigned int no_bytes);
+void memmove(void* src, void* dest, short unsigned int no_bytes);
+char itoa(int num);

@@ -1,13 +1,33 @@
-#include "../../drivers/header/vga.h"
+#include "../drivers/header/vga.h"
 #include "header/util.h"
-#include "../../types.h"
 
 void _start() {
-    clear_screen();
-
-    kprint("I'm back boiiiiiis\n");
-    kprint("And I'm stronger than I was\n");
-
-    return;
+  clear_screen();
+  kprint("And I'm stronger than I was\n");
+  kprint("How are you holding up kiddo?");
+  kprint("\nNot too shabby\n");
+  kprint("And I'm stronger than I was\n");
+  kprint("How are you holding up kiddo?");
+  kprint("\nNot too shabby\n");
+  kprint("And I'm stronger than I was\n");
+  kprint("How are you holding up kiddo?");
+  kprint("\nNot too shabby\n");
+  kprint("And I'm stronger than I was\n");
+  kprint("How are you holding up kiddo?");
+  kprint("\nNot too shabby\n");
+  kprint("And I'm stronger than I was\n");
+  kprint("How are you holding up kiddo?");
+  kprint("\nNot too shabby\n");
+  kprint("And I'm stronger than I was\n");
+  kprint("How are you holding up kiddo?");
+  kprint("\nNot too shabby\n");
+  kprint("And I'm stronger than I was\n");
+  kprint("How are you holding up kiddo?");
+  kprint("\nNot too shabby\n");
+  kprint("And I'm stronger than I was\n");
+  kprint("How are you holding up kiddo?");
+  kprint("\nNot too shabby\n");
+  while (1) {}
+  return;
 }
 

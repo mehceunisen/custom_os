@@ -1,9 +1,25 @@
 #include "header/util.h"
 
-void memcpy(void* src, void* dest, int16 no_bytes) {
+void memcpy(void* src, void* dest, short unsigned int no_bytes) {
     int i = 0;
     for (; i < no_bytes; i++)
         *((char*)(dest + i)) = *((char*)(src + i));
+}
+
+void memmove(void* src, void* dest, short unsigned int no_bytes) {
+  char* _src = (char*)src;
+  char* _dest = (char*)dest;
+
+  if (_src > _dest || _dest >= _src + no_bytes) {
+    for (int i = 0; i < no_bytes; ++i) {
+      _dest[i] = _src[i];
+    }
+  }
+  else {
+    for (int i = no_bytes; i > 0; --i) {
+      _dest[i - 1] = _src[i - 1];
+    }
+  }
 }
 
 char itoa(int num) {
@@ -11,8 +27,3 @@ char itoa(int num) {
     return '0' + num;
 }
 
-void free(void* src) {
-    *((char*)src) = (char*)0x0;
-    //this is the best I can do for now
-    // I know that free doesn't work like this
-}
