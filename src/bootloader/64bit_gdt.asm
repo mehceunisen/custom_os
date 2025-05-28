@@ -9,8 +9,7 @@ switch_lm:
     mov eax, cr0                 ; Set the A-register to control register 0.
     or eax, 1 << 31              ; Set the PG-bit, which is the 32nd bit (bit 31).
     mov cr0, eax  
-    lgdt [GDT64.Pointer]
-    jmp .Code:baba
+    lgdt [GDT.Pointer]
 
 ; Access bits
 PRESENT        equ 1 << 7

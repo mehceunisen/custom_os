@@ -22,6 +22,12 @@ void memmove(void* src, void* dest, short unsigned int no_bytes) {
   }
 }
 
+void memwrite(void* dest, long val, short unsigned int no_bytes, symbol_size_t size) {
+  for (int i = 0; i < no_bytes; i += size)
+    *(char*)(dest + i) = val;
+
+}
+
 char itoa(int num) {
     //quite a simple one but get's the job done
     return '0' + num;

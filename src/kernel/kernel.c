@@ -1,34 +1,37 @@
 #include "../drivers/header/vga.h"
 #include "header/util.h"
-
+#include "../cpu/gdt.h"
 void _start() {
+  reload_gdt();
   clear_screen();
-  kprint("And I'm stronger than I was\n");
-  kprint("How are you holding up kiddo?");
-  kprint("\nNot too shabby\n");
-  kprint("And I'm stronger than I was\n");
-  kprint("How are you holding up kiddo?");
-  kprint("\nNot too shabby\n");
-  kprint("And I'm stronger than I was\n");
-  kprint("How are you holding up kiddo?");
-  kprint("\nNot too shabby\n");
-  kprint("And I'm stronger than I was\n");
-  kprint("How are you holding up kiddo?");
-  kprint("\nNot too shabby\n");
-  kprint("And I'm stronger than I was\n");
-  kprint("How are you holding up kiddo?");
-  kprint("\nNot too shabby\n");
-  kprint("And I'm stronger than I was\n");
-  kprint("How are you holding up kiddo?");
-  kprint("\nNot too shabby\n");
-  kprint("And I'm stronger than I was\n");
-  kprint("How are you holding up kiddo?");
-  kprint("\nNot too shabby\n");
-  kprint("And I'm stronger than I was\n");
-  kprint("How are you holding up kiddo?");
-  kprint("\nNot too shabby\n");
-  kprint("testing\n");
-  kprint("one two three\n");
+  
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 123\n");
+  kprint("testing 456\n");
+  kprint("testing 456\n");
+  kprint("testing 456\n");
+  kprint("testing 456\n");
+  kprint("testing 456\n");
+  kprint("testing 456\n");
   while (1) {}
   return;
 }

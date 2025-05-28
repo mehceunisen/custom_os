@@ -1,6 +1,6 @@
 CC := x86_64-elf-gcc
-CC_FLAGS := -w -m64 -ffreestanding -c -mno-red-zone
-CXX := g++
+CC_FLAGS := -w -m64 -ffreestanding -c -mno-red-zone #--target=x86_64-none-unknown
+CXX := clang++
 
 LINK := x86_64-elf-ld
 LDS := linker.ld
@@ -11,10 +11,11 @@ NASM_FLAGS := -f elf64
 KERNEL_DIR := src/kernel
 BOOTLOADER_DIR := src/bootloader
 DRIVER_DIR := src/drivers
+CPU_DIR := src/cpu
 BUILD_DIR := build
 OBJ_DIR := build/obj
 
-C_SRC_FILES = $(wildcard ${KERNEL_DIR}/*.c ${DRIVER_DIR}/*.c)
+C_SRC_FILES = $(wildcard ${KERNEL_DIR}/*.c ${DRIVER_DIR}/*.c ${CPU_DIR}/*.c)
 CPP_SRC_FILES = $(wildcard ${KERNEL_DIR}/*.cpp ${DRIVER_DIR}/*.cpp)
 C_HEADER_FILES = $(wildcard ${KERNEL_DIR}/header/*.h ${DRIVER_DIR}/header/*.h)
 C_OBJ_FILES = ${C_SRC_FILES:.c=.o}
@@ -30,7 +31,7 @@ call_kernel.o: $(BOOTLOADER_DIR)/call_kernel.asm
 	nasm $(NASM_FLAGS) -o $@ $< -i 'src/bootloader'
 
 %.o: %.c ${C_HEADER_FILES}
-	${CC} ${CC_FLAGS} -w -I -mtune=x86_64 -ffreestanding -c $< -o $@
+	${CC} ${CC_FLAGS} -c $< -o $@
 
 %.o: %.cpp ${_HEADER_FILES}
 	${CXX} -w -I -mtune=x86_64 -ffreestanding -c $< -o $@

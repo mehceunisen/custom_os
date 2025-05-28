@@ -18,22 +18,16 @@ void kprint(char* message) {
 void clear_screen() {
   char* base_addr = (char*)VID_ADDR;
   
-  for (int i = 0; i < 85 * 20; i += 2) {
-    *(base_addr + i) = 0x0;
-    *(base_addr + i + 1) = 0x0;
-  }
+  memwrite((void*)VID_ADDR, 0x00, MAX_ROWS * MAX_COLS, s_byte);
 
-  // reset the cursor
   set_cursor_offset(0);
 }
 
 void scroll() {
   memmove((void*)VID_ADDR + ONE_COL_OFFSET, (void*)VID_ADDR, VID_BUF_SIZE - ONE_COL_OFFSET);
   char* last_line = (char*)(VID_ADDR + VID_BUF_SIZE - ONE_COL_OFFSET);
-  for (int i = 0; i < ONE_COL_OFFSET / 2; ++i) {
-    last_line[i * 2] = ' ';      // character
-    last_line[i * 2 + 1] = 0x0F; // attribute: white on black
-  }
+
+  memwrite((void*)last_line, 0x0000, ONE_COL_OFFSET / 2, s_word);
 }
 
 void print_char(char c, char attr) {
