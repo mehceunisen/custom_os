@@ -2,9 +2,9 @@
 #define MAX_ROWS 25
 #define MAX_COLS 80
 
-#define ONE_ROW_OFFSET 25 * 2 // bytes
-#define ONE_COL_OFFSET 80 * 2 // bytes
-#define VID_BUF_SIZE 25 * 80 * 2 // bytes
+#define ONE_ROW_OFFSET MAX_ROWS * 2 // bytes
+#define ONE_COL_OFFSET MAX_COLS * 2  // bytes
+#define VID_BUF_SIZE MAX_ROWS * MAX_COLS * 2
 
 #define WHITE_ON_BLACK 0x0f
 

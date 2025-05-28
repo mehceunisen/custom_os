@@ -28,10 +28,11 @@ void clear_screen() {
 }
 
 void scroll() {
-  memmove((void*)VID_ADDR, (void*)((char*)VID_ADDR + ONE_COL_OFFSET), VID_BUF_SIZE - ONE_COL_OFFSET);
+  memmove((void*)VID_ADDR + ONE_COL_OFFSET, (void*)VID_ADDR, VID_BUF_SIZE - ONE_COL_OFFSET);
   char* last_line = (char*)(VID_ADDR + VID_BUF_SIZE - ONE_COL_OFFSET);
-  for (int i = 0; i < ONE_COL_OFFSET; ++i) {
-    last_line[i] = 0x0;
+  for (int i = 0; i < ONE_COL_OFFSET / 2; ++i) {
+    last_line[i * 2] = ' ';      // character
+    last_line[i * 2 + 1] = 0x0F; // attribute: white on black
   }
 }
 
@@ -52,6 +53,8 @@ void print_char(char c, char attr) {
   if (_row >= MAX_ROWS) {
     scroll();
     off = _eval_offset(0, MAX_ROWS - 1);
+    _row = MAX_ROWS - 1;
+    base_addr = (char*)VID_ADDR + off;
   }
 
   if (c == NEW_LINE_CHAR) {

@@ -27,6 +27,8 @@ void _start() {
   kprint("And I'm stronger than I was\n");
   kprint("How are you holding up kiddo?");
   kprint("\nNot too shabby\n");
+  kprint("testing\n");
+  kprint("one two three\n");
   while (1) {}
   return;
 }

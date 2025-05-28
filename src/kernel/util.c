@@ -16,7 +16,7 @@ void memmove(void* src, void* dest, short unsigned int no_bytes) {
     }
   }
   else {
-    for (int i = no_bytes; i > 0; --i) {
+    for (int i = no_bytes - 1; i > 0; --i) {
       _dest[i - 1] = _src[i - 1];
     }
   }
