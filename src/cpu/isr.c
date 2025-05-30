@@ -2,6 +2,7 @@
 
 #include "isr.h"
 #include "../drivers/header/vga.h"
+#include "../drivers/header/ports.h"
 
 ISR_NOERRCODE(0)   // Divide by Zero
 ISR_NOERRCODE(1)   // Debug
@@ -39,7 +40,6 @@ ISR_NOERRCODE(31)  // Reserved
 // Common ISR handler that all stubs jump to
 void isr_common_handler(void) {
     asm volatile (
-        "cli\n\t"
         "push %%rax\n\t"
         "push %%rbx\n\t" 
         "push %%rcx\n\t"
@@ -84,15 +84,7 @@ void isr_common_handler(void) {
         ::: "memory" 
         );
 }
-
 void interrupt_handler(interrupt_frame* frame) {
-
-  //__asm__ volatile ("cli");
-  //__asm__ volatile ("sti");
-  // do nothing, just to compile
-  //while(1) {}
+  kprint("caught an interrupt\n");
+//  while(1) {}
 }
-
-
-
-

@@ -4,14 +4,15 @@
 #include "../cpu/idt.h"
 void _start() {
   reload_gdt();
-  //reload_idt();
+  reload_idt();
 
   clear_screen();
   
   kprint("hellow\n");
 
-  //__asm__ volatile("int $3");
-
+  __asm__ volatile("int $13");
+  __asm__ volatile("int $14");
+  __asm__ volatile("int $15");
   while (1) {}
   return;
 }

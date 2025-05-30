@@ -1,10 +1,12 @@
 #pragma once
+
 #include "../util/types.h"
 #include "isr.h"
+
 #define MAX_IDT_ENTRIES 256 // max number of interrupts
 
 #define SEGMENT_KC 0x08
-#define SEGMENT_ATT 0x8E
+#define SEGMENT_ATT 0x8F
 #define SEGMENT_KD 0x10
 
 typedef struct __attribute__((packed)) {

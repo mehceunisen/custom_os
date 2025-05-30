@@ -1,25 +1,18 @@
 #include "../util/types.h"
 
-// ISR stub generators - exceptions WITHOUT error codes (push dummy 0)
 #define ISR_NOERRCODE(num) \
-    void isr##num(void) { \
+    __attribute__((naked)) void isr##num(void) { \
         asm volatile ( \
-            "cli\n\t" \
-            "push $0\n\t" \
-            "push $" #num "\n\t" \
-            "jmp isr_common_handler" \
-            ::: "memory" \
+            "pushq $" #num "\n\t" \
+            "jmp isr_common_handler\n\t" \
         ); \
     }
 
-// ISR stub generators - exceptions WITH error codes (don't push dummy)
 #define ISR_ERRCODE(num) \
-    void isr##num(void) { \
+    __attribute__((naked)) void isr##num(void) { \
         asm volatile ( \
-            "cli\n\t" \
-            "push $" #num "\n\t" \
-            "jmp isr_common_handler" \
-            ::: "memory" \
+            "pushq $" #num "\n\t" \
+            "jmp isr_common_handler\n\t" \
         ); \
     }
 
@@ -58,16 +51,10 @@ extern void isr30(void);
 extern void isr31(void);
 
 typedef struct __attribute__((packed)) {
-    // Pushed by our stub
-    uint32_t gs, fs, es, ds;
-    uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;  // pusha order
-    uint32_t interrupt_num, error_code;
-    
-    // Pushed by CPU during interrupt
-    uint32_t eip, cs, eflags, user_esp, user_ss;
+    uint64_t rdi, rsi, rbp, rsp, rbx, rdx, rcx, rax;
+    uint64_t interrupt_num, error_code;
+    uint64_t rip, cs, rflags, user_rsp, ss;
 } interrupt_frame;
-
-//static void* isr_stub_table[32];
 
 void interrupt_handler(interrupt_frame* frame);
 void isr_common_handler(void);
