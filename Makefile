@@ -1,4 +1,4 @@
-CC := x86_64-elf-gcc
+CC := x86_64-elf-gcc #clang
 CC_FLAGS := -w -m64 -ffreestanding -c -mno-red-zone #--target=x86_64-none-unknown
 CXX := clang++
 
@@ -39,9 +39,10 @@ call_kernel.o: $(BOOTLOADER_DIR)/call_kernel.asm
 bootloader.bin: $(BOOTLOADER_DIR)/bootloader.asm
 	nasm $< -f bin -o bootloader.bin -i 'src/bootloader'
 
+run-debug:
+	qemu-system-x86_64 -no-reboot -d int -s -fda os.bin
 run:
 	qemu-system-x86_64 -s -fda os.bin
-
 clean:
 	rm *.o *.bin ${C_OBJ_FILES} ${CPP_OBJ_FILES}
 

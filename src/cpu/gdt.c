@@ -3,8 +3,7 @@
 gdt_descriptor_t __gdt_descriptor_table[GDT_MAX_DESCRIPTORS];
 static gdtr_t gdtr;
 
-void edit_descriptor(uint64_t base, uint64_t limit, uint8_t access_byte, 
-    uint8_t flags, uint8_t gdt_index) 
+void edit_gdt_descriptor(uint64_t base, uint32_t limit, uint8_t access_byte, uint8_t flags, uint8_t gdt_index) 
 {
   __gdt_descriptor_table[gdt_index].limit = limit;
 
@@ -24,15 +23,11 @@ void fill_gdt_descriptor() {
 
   uint8_t gdt_idx = 0;
 
-    edit_descriptor(0, 0, 0, 0, gdt_idx++);
-  edit_descriptor(0, 0xFFFFF, 0x9A,
-      0xA, gdt_idx++);
-  edit_descriptor(0, 0xFFFFF, 0x92,
-      0xC, gdt_idx++);
-  edit_descriptor(0, 0xFFFFF, 0xFA,
-      0xA, gdt_idx++);
-  edit_descriptor(0, 0xFFFFF, 0xF2,
-      0xC, gdt_idx++);
+  edit_gdt_descriptor(0, 0, 0, 0, gdt_idx++);
+  edit_gdt_descriptor(0, 0xFFFFF, 0x9A, 0xA, gdt_idx++);
+  edit_gdt_descriptor(0, 0xFFFFF, 0x92, 0xC, gdt_idx++);
+  edit_gdt_descriptor(0, 0xFFFFF, 0xFA, 0xA, gdt_idx++);
+  edit_gdt_descriptor(0, 0xFFFFF, 0xF2, 0xC, gdt_idx++);
 
 }
 
