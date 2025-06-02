@@ -1,5 +1,5 @@
 CC := x86_64-elf-gcc #clang
-CC_FLAGS := -w -m64 -ffreestanding -c -mno-red-zone #--target=x86_64-none-unknown
+CC_FLAGS := -w -m64 -ffreestanding -c -mno-red-zone -DDEBUG #--target=x86_64-none-unknown
 CXX := clang++
 CXX_FLAGS := -w -m64 -ffreestanding -c -mno-red-zone
 LINK := x86_64-elf-ld
@@ -31,7 +31,7 @@ CPP_OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(notdir $(CPP_SRC_FILES:.cpp=.o)))
 # Main target
 ${BIN_DIR}/os.bin: ${BIN_DIR}/bootloader.bin ${BIN_DIR}/call_kernel.bin
 	cat $^ > $@
-	compiledb -n make
+
 
 # Kernel binary
 ${BIN_DIR}/call_kernel.bin: ${OBJ_DIR}/call_kernel.o $(C_OBJ_FILES) $(CPP_OBJ_FILES) | ${BIN_DIR}
@@ -43,17 +43,15 @@ ${OBJ_DIR}/call_kernel.o: $(BOOTLOADER_DIR)/call_kernel.asm | ${OBJ_DIR}
 
 # C object files
 $(OBJ_DIR)/%.o: $(KERNEL_DIR)/%.c $(C_HEADER_FILES) | ${OBJ_DIR}
-	${CC} -I ${INCLUDE_DIR} ${CC_FLAGS} $< -o $@
+	${CC} -I ${INCLUDE_DIR} -I src ${CC_FLAGS} $< -o $@
 
 $(OBJ_DIR)/%.o: $(DRIVER_DIR)/%.c $(C_HEADER_FILES) | ${OBJ_DIR}
-	${CC} -I ${INCLUDE_DIR} ${CC_FLAGS} $< -o $@
+	${CC} -I ${INCLUDE_DIR} -I src ${CC_FLAGS} $< -o $@
 
 $(OBJ_DIR)/%.o: $(CPU_DIR)/%.c $(C_HEADER_FILES) | ${OBJ_DIR}
-	${CC} -I ${INCLUDE_DIR} ${CC_FLAGS} $< -o $@
+	${CC} -I ${INCLUDE_DIR} -I src ${CC_FLAGS} $< -o $@
 
 $(OBJ_DIR)/%.o: $(UTIL_DIR)/%.c $(C_HEADER_FILES) | ${OBJ_DIR}
-	@echo "celdum"
-	@echo $@
 	${CC} -I ${INCLUDE_DIR} ${CC_FLAGS} $< -o $@
 
 # C++ object files
@@ -79,10 +77,13 @@ run-debug: ${BIN_DIR}/os.bin
 	qemu-system-x86_64 -no-reboot -d int -s -fda $<
 
 run: ${BIN_DIR}/os.bin
-	qemu-system-x86_64 -s -fda $<
+	qemu-system-x86_64 -serial stdio -s -fda $<
 
 clean:
 	rm -f ${OBJ_DIR}/*.o ${BIN_DIR}/*.bin
 
 boot: ${BIN_DIR}/bootloader.bin
 	qemu-system-x86_64 -fda $
+
+update_links:
+	compiledb -n make
