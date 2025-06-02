@@ -1,4 +1,4 @@
-#include "../util/types.h"
+#include <types.h>
 
 #define ISR_NOERRCODE(num) \
     __attribute__((naked)) void isr##num(void) { \

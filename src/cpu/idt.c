@@ -1,4 +1,4 @@
-#include "idt.h"
+#include "include/idt.h"
 
 idt_descriptor_t __idt_descriptors[MAX_IDT_ENTRIES];
 idtr_t __idtr;

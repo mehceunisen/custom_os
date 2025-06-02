@@ -1,4 +1,4 @@
-#include "gdt.h"
+#include "include/gdt.h"
 
 gdt_descriptor_t __gdt_descriptor_table[GDT_MAX_DESCRIPTORS];
 static gdtr_t gdtr;

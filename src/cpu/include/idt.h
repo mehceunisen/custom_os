@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../util/types.h"
+#include <types.h>
 #include "isr.h"
 
 #define MAX_IDT_ENTRIES 256 // max number of interrupts

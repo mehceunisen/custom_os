@@ -1,6 +1,6 @@
-#include "header/vga.h"
-#include "header/ports.h"
-#include "../kernel/header/util.h"
+#include "include/vga.h"
+#include "include/ports.h"
+#include <mem_util.h>
 
 int _eval_offset(int col, int row) { return 2 * (row * MAX_COLS + col); }
 int _eval_offset_row(int offset) { return offset / (2 * MAX_COLS); }

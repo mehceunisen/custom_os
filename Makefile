@@ -1,50 +1,88 @@
 CC := x86_64-elf-gcc #clang
 CC_FLAGS := -w -m64 -ffreestanding -c -mno-red-zone #--target=x86_64-none-unknown
 CXX := clang++
-
+CXX_FLAGS := -w -m64 -ffreestanding -c -mno-red-zone
 LINK := x86_64-elf-ld
 LDS := linker.ld
-LINK_FLAGS :=-static -Bsymbolic -nostdlib -n
-
+LINK_FLAGS := -static -Bsymbolic -nostdlib -n
 NASM_FLAGS := -f elf64
 
 KERNEL_DIR := src/kernel
 BOOTLOADER_DIR := src/bootloader
 DRIVER_DIR := src/drivers
 CPU_DIR := src/cpu
+UTIL_DIR := src/util
 BUILD_DIR := build
-OBJ_DIR := build/obj
+INCLUDE_DIR := ${UTIL_DIR}/include
+OBJ_DIR := ${BUILD_DIR}/obj
+BIN_DIR := ${BUILD_DIR}/bin
 
-C_SRC_FILES = $(wildcard ${KERNEL_DIR}/*.c ${DRIVER_DIR}/*.c ${CPU_DIR}/*.c)
+# Source files
+C_SRC_FILES = $(wildcard ${KERNEL_DIR}/*.c ${DRIVER_DIR}/*.c ${CPU_DIR}/*.c ${UTIL_DIR}/*.c)
 CPP_SRC_FILES = $(wildcard ${KERNEL_DIR}/*.cpp ${DRIVER_DIR}/*.cpp)
-C_HEADER_FILES = $(wildcard ${KERNEL_DIR}/header/*.h ${DRIVER_DIR}/header/*.h)
-C_OBJ_FILES = ${C_SRC_FILES:.c=.o}
-CPP_OBJ_FILES = ${CPP_SRC_FILES:.cpp=.o}
+C_HEADER_FILES = $(wildcard ${KERNEL_DIR}/include/*.h ${DRIVER_DIR}/include/*.h ${CPU_DIR}/include/*.h ${UTIL_DIR}/include/*.h)
 
-os.bin: bootloader.bin call_kernel.bin
+# Object files with proper paths
+C_OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(notdir $(C_SRC_FILES:.c=.o)))
+CPP_OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(notdir $(CPP_SRC_FILES:.cpp=.o)))
+
+.PHONY: run run-debug clean boot
+
+# Main target
+${BIN_DIR}/os.bin: ${BIN_DIR}/bootloader.bin ${BIN_DIR}/call_kernel.bin
 	cat $^ > $@
+	compiledb -n make
 
-call_kernel.bin: call_kernel.o $(C_OBJ_FILES) $(CPP_OBJ_FILES)
-	$(LINK) $(LINK_FLAGS) -T ${LDS} -o $@  $^ --oformat binary
+# Kernel binary
+${BIN_DIR}/call_kernel.bin: ${OBJ_DIR}/call_kernel.o $(C_OBJ_FILES) $(CPP_OBJ_FILES) | ${BIN_DIR}
+	$(LINK) $(LINK_FLAGS) -T ${LDS} -o $@ $^ --oformat binary
 
-call_kernel.o: $(BOOTLOADER_DIR)/call_kernel.asm
+# Assembly object file
+${OBJ_DIR}/call_kernel.o: $(BOOTLOADER_DIR)/call_kernel.asm | ${OBJ_DIR}
 	nasm $(NASM_FLAGS) -o $@ $< -i 'src/bootloader'
 
-%.o: %.c ${C_HEADER_FILES}
-	${CC} ${CC_FLAGS} -c $< -o $@
+# C object files
+$(OBJ_DIR)/%.o: $(KERNEL_DIR)/%.c $(C_HEADER_FILES) | ${OBJ_DIR}
+	${CC} -I ${INCLUDE_DIR} ${CC_FLAGS} $< -o $@
 
-%.o: %.cpp ${_HEADER_FILES}
-	${CXX} -w -I -mtune=x86_64 -ffreestanding -c $< -o $@
+$(OBJ_DIR)/%.o: $(DRIVER_DIR)/%.c $(C_HEADER_FILES) | ${OBJ_DIR}
+	${CC} -I ${INCLUDE_DIR} ${CC_FLAGS} $< -o $@
 
-bootloader.bin: $(BOOTLOADER_DIR)/bootloader.asm
-	nasm $< -f bin -o bootloader.bin -i 'src/bootloader'
+$(OBJ_DIR)/%.o: $(CPU_DIR)/%.c $(C_HEADER_FILES) | ${OBJ_DIR}
+	${CC} -I ${INCLUDE_DIR} ${CC_FLAGS} $< -o $@
 
-run-debug:
-	qemu-system-x86_64 -no-reboot -d int -s -fda os.bin
-run:
-	qemu-system-x86_64 -s -fda os.bin
+$(OBJ_DIR)/%.o: $(UTIL_DIR)/%.c $(C_HEADER_FILES) | ${OBJ_DIR}
+	@echo "celdum"
+	@echo $@
+	${CC} -I ${INCLUDE_DIR} ${CC_FLAGS} $< -o $@
+
+# C++ object files
+$(OBJ_DIR)/%.o: $(KERNEL_DIR)/%.cpp $(C_HEADER_FILES) | ${OBJ_DIR}
+	${CXX} -I ${INCLUDE_DIR} ${CXX_FLAGS} $< -o $@
+
+$(OBJ_DIR)/%.o: $(DRIVER_DIR)/%.cpp $(C_HEADER_FILES) | ${OBJ_DIR}
+	${CXX} -I ${INCLUDE_DIR} ${CXX_FLAGS} $< -o $@
+
+# Bootloader binary
+${BIN_DIR}/bootloader.bin: $(BOOTLOADER_DIR)/bootloader.asm | ${BIN_DIR}
+	nasm $< -f bin -o $@ -i 'src/bootloader'
+
+# Directory creation
+${OBJ_DIR}:
+	mkdir -p ${OBJ_DIR}
+
+${BIN_DIR}:
+	mkdir -p ${BIN_DIR}
+
+# Targets
+run-debug: ${BIN_DIR}/os.bin
+	qemu-system-x86_64 -no-reboot -d int -s -fda $<
+
+run: ${BIN_DIR}/os.bin
+	qemu-system-x86_64 -s -fda $<
+
 clean:
-	rm *.o *.bin ${C_OBJ_FILES} ${CPP_OBJ_FILES}
+	rm -f ${OBJ_DIR}/*.o ${BIN_DIR}/*.bin
 
-boot: bootloader.bin
-	qemu-system-x86_64  bootloader.bin
+boot: ${BIN_DIR}/bootloader.bin
+	qemu-system-x86_64 -fda $

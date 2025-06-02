@@ -1,5 +1,5 @@
 #pragma once
-#include "../util/types.h"
+#include <types.h>
 
 #define GDT_MAX_DESCRIPTORS 6
 
