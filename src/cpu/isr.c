@@ -1,8 +1,6 @@
 #pragma once
 
 #include "include/isr.h"
-#include "../drivers/include/vga.h"
-#include "../drivers/include/ports.h"
 
 ISR_NOERRCODE(0)   // Divide by Zero
 ISR_NOERRCODE(1)   // Debug
@@ -83,7 +81,4 @@ void isr_common_handler(void) {
         "iretq"                        // 64-bit return from interrupt
         ::: "memory" 
         );
-}
-void interrupt_handler(interrupt_frame* frame) {
-  kprint("caught an interrupt\n");
 }

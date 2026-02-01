@@ -19,7 +19,7 @@ void _start() {
   __asm__ volatile("int $11");
 
   SERIAL_PRINT("hello world\n");
-
+  
   while (1) {}
   return;
 }

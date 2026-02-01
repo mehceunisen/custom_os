@@ -12,9 +12,7 @@
   } while (0)
 
 #else
-
 #define SERIAL_PRINT(s)
-
 #endif
 
 typedef enum {
@@ -25,6 +23,6 @@ typedef enum {
   port_modem_ctrl,
 } port_base_t;
 
-extern int init_serial();
+int init_serial();
 void send_char(char c);
 

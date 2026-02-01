@@ -28,8 +28,8 @@ void memwrite(void* dest, long val, short unsigned int no_bytes, symbol_size_t s
 
 }
 
-char itoa(int num) {
-    //quite a simple one but get's the job done
-    return '0' + num;
+void memset(void* dest, char val, unsigned short no_bytes) {
+  for (int i = 0; i < no_bytes; ++i) {
+    *(char*)(dest + i) = val;
+  }
 }
-

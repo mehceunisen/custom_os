@@ -2,7 +2,6 @@
 #include <drivers/include/ports.h>
 #include <drivers/include/vga.h>
 
-
 int init_serial() {
   port_byte_out(port_interrupt_enable, 0x00);    // Disable all interrupts
   port_byte_out(port_line_ctrl, 0x80);    // Enable DLAB (set baud rate divisor)

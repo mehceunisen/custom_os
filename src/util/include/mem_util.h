@@ -8,4 +8,4 @@ typedef enum {
 void memcpy(void* src, void* dest, short unsigned int no_bytes);
 void memmove(void* src, void* dest, short unsigned int no_bytes);
 void memwrite(void* dest, long val, short unsigned int no_bytes, symbol_size_t size);
-char itoa(int num);
+void memset(void* dest, char val, unsigned short no_bytes);

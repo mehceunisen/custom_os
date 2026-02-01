@@ -10,3 +10,4 @@ src/kernel/*.o
 *.ini
 compile_commands.json
 .DS_Store
+.cache/
